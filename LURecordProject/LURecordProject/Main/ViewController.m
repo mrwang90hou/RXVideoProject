@@ -78,14 +78,16 @@
 {
     MediaDetailVC *detailVC = [[MediaDetailVC alloc] init];
     BaseNavViewController *navVC = [[BaseNavViewController alloc] initWithRootViewController:detailVC];
-    [self presentViewController:navVC animated:YES completion:nil];
+//    [self presentViewController:navVC animated:YES completion:nil];
+    [self.navigationController pushViewController:detailVC animated:YES];
 }
 
 - (void)enterVideoListVC
 {
     MediaDownloadVC *downloadVC = [[MediaDownloadVC alloc] init];
     BaseNavViewController *navVC = [[BaseNavViewController alloc] initWithRootViewController:downloadVC];
-    [self presentViewController:navVC animated:YES completion:nil];
+//    [self presentViewController:navVC animated:YES completion:nil];
+    [self.navigationController pushViewController:downloadVC animated:YES];
 }
 
 - (void)enterFullScreenVideoVC

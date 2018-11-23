@@ -194,11 +194,14 @@
         if ([urlStr rangeOfString:dic[@"url"]].location != NSNotFound) {
             NSString *filePath = dic[@"filePath"];
             if (filePath.length > 0) {
-                _isLocateVideo = YES;
+                _isLocateVideo = YES;//是否是已下载视频播放
                 _videoBtn.hidden = YES;
+                NSLog(@"当前为已下载视频播放！！！\nfilePath = %@",dic[@"filePath"]);
+                NSURL * filePathURL = [NSURL fileURLWithPath:dic[@"filePath"]];
+                NSLog(@"filePathURL = %@",filePathURL);
                 return [NSURL fileURLWithPath:dic[@"filePath"]];
+//                return [NSURL fileURLWithPath:@"file:///private/var/mobile/Containers/Data/Application/9E2C2E56-79AC-419D-83A7-8326249C8E1C/Library/Caches/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
             }
-            
         }
     }
     NSURL *mediaUrl;
@@ -209,7 +212,7 @@
     }else{
         mediaUrl = [NSURL URLWithString:urlStr];
     }
-    
+
     return mediaUrl;
 }
 

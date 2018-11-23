@@ -58,6 +58,7 @@
     [self.view addSubview:self.tableView];
 
     _UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
+//    _UrlStr = @"http://192.72.1.1/SD/Normal/NK_D20181123_105701_1440.MP4";
     self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",_UrlStr];
 
 }

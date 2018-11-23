@@ -55,7 +55,7 @@
             break;
         }
     }
-    
+    //如果视频已经存在，则返回不允许下载
     if (!isAllowLoad) {
         return;
     }
@@ -106,7 +106,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     NSString *videoUrl = downloadTask.response.URL.description;
     for (int i = 0; i < _videoList.count; i++) {
         NSDictionary *dic = _videoList[i];
-
         if ([videoUrl rangeOfString:dic[@"url"]].location != NSNotFound) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:dic];
             [dict setValue:@(totalBytesExpectedToWrite) forKey:@"videoBytes"];
@@ -120,7 +119,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     CGFloat progress = totalBytesWritten / (double)totalBytesExpectedToWrite;
     dispatch_async(dispatch_get_main_queue(), ^{
         //进行UI操作  设置进度条
-//字节KB转MB
+        //字节KB转MB
         self.refreshSliderValueBlock(progress, totalBytesWritten/1024/1024, totalBytesExpectedToWrite/1024/1024, videoUrl);
     });
 }
@@ -132,8 +131,10 @@ didFinishDownloadingToURL:(NSURL *)location
     NSString *cache=[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)lastObject];
     //2,拿到cache文件夹和文件名
     NSString *file=[cache stringByAppendingPathComponent:downloadTask.response.suggestedFilename];
-    
+    NSLog(@"location = %@\ncache = %@\nfile =%@\n",location,cache,file);
+    //保存至缓存地址：cache
     [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:file] error:nil];
+
 //    //3，保存视频到相册
 //    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(file)) {
 //        //保存相册核心代码

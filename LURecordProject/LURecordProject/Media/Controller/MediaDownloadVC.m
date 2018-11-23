@@ -27,6 +27,9 @@
 #import "DKDownloadTask.h"
 #import "MediaDownloadModel.h"
 
+#import "DKAVPlayer.h"
+#import "DKFullScreenVC.h"
+
 NSString *kMediaDownloadCell = @"MediaDownloadCell";
 
 @interface MediaDownloadVC ()<UITableViewDelegate, UITableViewDataSource>
@@ -35,6 +38,11 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
 @property (nonatomic, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, assign) BOOL isDelete;
+
+
+
+@property (nonatomic, strong) DKAVPlayer *avPlayer;
+@property (nonatomic, strong) DKFullScreenVC *fullPlayer;
 
 @end
 
@@ -123,6 +131,7 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     cell.model = model;
     cell.isDelete = _isDelete;
     [cell refreshDownloadUI:model.isDownload];
+    NSLog(@"model.filePath = %@",model.filePath);
     WS(weakSelf);
     [cell setDeleteCellBlock:^(MediaDownloadCell *cell) {
         NSInteger index = [weakSelf.tableView indexPathForCell:cell].row;
@@ -133,6 +142,59 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     }];
     return cell;
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    MediaDownloadModel *model = _dataArray[indexPath.row];
+    NSLog(@"model.url = %@",model.url);//下载地址
+    NSLog(@"model.videoName = %@",model.videoName);//视频名称
+    NSLog(@"model.isDownload = %d",model.isDownload);//是否下载完成
+    NSLog(@"model.videoBytes = %lf",model.videoBytes);//视频大小
+    NSLog(@"model.filePath = %@",model.filePath);//本地视频地址
+    
+    NSArray *paths1 = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    //获取Caches中的缓存地址
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
+    NSString *docDir = [paths objectAtIndex:0];
+    NSLog(@"docDir = %@",docDir);
+    NSString *filePath1 = [docDir stringByAppendingPathComponent:@"fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
+    NSArray *array1 = [[NSArray alloc] initWithContentsOfFile:filePath1];
+    NSLog(@"%@",array1);
+    
+    
+//    [self setAVPlayer];
+//    NSString *UrlStr = model.filePath;
+//    NSLog(@"UrlStr = %@",UrlStr);
+//    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
+//    self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",UrlStr];
+//    [self.view addSubview:self.avPlayer];
+    
+    
+    
+    //删除操作
+//    NSInteger index = indexPath.row;
+//    NSMutableArray *array = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:kDownloadVideoList]];
+//    NSDictionary *dataDic = [array objectAtIndex:index];
+//    [array removeObjectAtIndex:index];
+//    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:array] forKey:kDownloadVideoList];
+//    NSString *filePath = dataDic[@"filePath"];
+//    NSLog(@"filePath = %@",filePath);
+//    BOOL isHave = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+//    NSLog(@"isHave = %d",isHave);
+//    if (isHave) {
+//        BOOL isDelte = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+//        if (isDelte) {
+//            //            [array removeObjectAtIndex:index];
+//            //            [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:array] forKey:kDownloadVideoList];
+//            NSLog(@"删除成功");
+//        }else{
+//            //            删除失败
+//            NSLog(@"删除失败");
+//        }
+//    }
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 0.01;
@@ -164,6 +226,38 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+-(void)setAVPlayer{
+    _avPlayer = [[DKAVPlayer alloc] initWithFrame:CGRectMake(0, 60, mainWidth, mainWidth*9/16) andMediaURL:nil];
+    _avPlayer.backgroundColor = UIColorFromRGB(0x1D1C1F);
+    WS(weakSelf);
+    [_avPlayer setClickedFullScreenBlock:^(BOOL isFullScreen) {
+        if (isFullScreen) {
+            weakSelf.avPlayer.isFullScreen = YES;
+            weakSelf.fullPlayer = [[DKFullScreenVC alloc] init];
+            [weakSelf.fullPlayer.view addSubview:weakSelf.avPlayer];
+            weakSelf.avPlayer.frame = CGRectMake(0, 0, mainHeight, mainWidth);
+            [weakSelf.tempbtn removeFromSuperview];
+            [weakSelf presentViewController:weakSelf.fullPlayer animated:NO completion:nil];
+        }else{
+            weakSelf.avPlayer.isFullScreen = NO;
+            [weakSelf.fullPlayer dismissViewControllerAnimated:NO completion:^{
+                
+                weakSelf.avPlayer.frame = CGRectMake(0, 0, mainWidth, 200*ScaleX);
+                [weakSelf.tableView reloadData];
+                
+            }];
+            
+        }
+    }];
+}
+
+
+-(void)dealloc{
+    [self.avPlayer pausePlay];
+    self.avPlayer =nil;
 }
 
 /*
