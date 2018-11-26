@@ -131,7 +131,7 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     cell.model = model;
     cell.isDelete = _isDelete;
     [cell refreshDownloadUI:model.isDownload];
-    NSLog(@"model.filePath = %@",model.filePath);
+    NSLog(@"[cellForRowAtIndexPath]model.filePath = %@",model.filePath);
     WS(weakSelf);
     [cell setDeleteCellBlock:^(MediaDownloadCell *cell) {
         NSInteger index = [weakSelf.tableView indexPathForCell:cell].row;
@@ -159,15 +159,15 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     NSLog(@"docDir = %@",docDir);
     NSString *filePath1 = [docDir stringByAppendingPathComponent:@"fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
     NSArray *array1 = [[NSArray alloc] initWithContentsOfFile:filePath1];
-    NSLog(@"%@",array1);
+    NSLog(@"array1 = %@",array1);
     
     
-//    [self setAVPlayer];
-//    NSString *UrlStr = model.filePath;
-//    NSLog(@"UrlStr = %@",UrlStr);
-//    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
-//    self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",UrlStr];
-//    [self.view addSubview:self.avPlayer];
+    [self setAVPlayer];
+    NSString *UrlStr = model.filePath;
+    NSLog(@"UrlStr = %@",UrlStr);
+    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
+    self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",UrlStr];
+    [self.view addSubview:self.avPlayer];
     
     
     

@@ -198,8 +198,13 @@
                 _videoBtn.hidden = YES;
                 NSLog(@"当前为已下载视频播放！！！\nfilePath = %@",dic[@"filePath"]);
                 NSURL * filePathURL = [NSURL fileURLWithPath:dic[@"filePath"]];
+//                NSURL * filePathURL =[NSURL fileURLWithPath:[NSString stringWithFormat:@"/private%@",dic[@"filePath"]]];
                 NSLog(@"filePathURL = %@",filePathURL);
-                return [NSURL fileURLWithPath:dic[@"filePath"]];
+                NSLog(@"NSHomeDirectory = %@",NSHomeDirectory());
+                NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
+                NSLog(@"cachePath = %@",cachePaths.firstObject);
+                
+                return filePathURL;
 //                return [NSURL fileURLWithPath:@"file:///private/var/mobile/Containers/Data/Application/9E2C2E56-79AC-419D-83A7-8326249C8E1C/Library/Caches/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
             }
         }
@@ -209,10 +214,11 @@
 //        本地视频
         urlStr = [[NSBundle mainBundle] pathForResource:urlStr ofType:@""];
         mediaUrl = [NSURL fileURLWithPath:urlStr];
+        NSLog(@"not http!!!");
     }else{
         mediaUrl = [NSURL URLWithString:urlStr];
+        NSLog(@"http!!!");
     }
-
     return mediaUrl;
 }
 
@@ -296,6 +302,7 @@
                                                options:dic];
     NSInteger totalSecond = urlAsset.duration.value / urlAsset.duration.timescale;
     _totalMediaSeconds = [NSString stringWithFormat:@"%02ld:%02ld", totalSecond/60, totalSecond%60];
+    NSLog(@"totalSecond = %@",[NSString stringWithFormat:@"%02ld:%02ld", totalSecond/60, totalSecond%60]);
     self.toolBar.avSlider.maximumValue = totalSecond;
     self.toolBar.timeStr = [NSString stringWithFormat:@"00:00/%@", _totalMediaSeconds];
 }
