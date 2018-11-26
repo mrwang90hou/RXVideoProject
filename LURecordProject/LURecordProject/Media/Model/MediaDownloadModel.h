@@ -36,6 +36,6 @@
 @property (nonatomic, strong) NSString *videoName;//视频名称
 @property (nonatomic, assign) BOOL isDownload;//是否下载完成
 @property (nonatomic, assign) double videoBytes;//视频大小
-@property (nonatomic, strong) NSString *filePath;//本地视频地址
+@property (nonatomic, strong) NSString *fileName;//本地视频地址、名称
 
 @end

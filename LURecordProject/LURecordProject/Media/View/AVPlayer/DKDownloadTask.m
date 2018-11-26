@@ -64,7 +64,7 @@
                           @"videoName":model.title,
                           @"isDownload":@(NO),
                           @"videoBytes":@(0),
-                          @"filePath":@""
+                          @"fileName":@""
                           };
     [array insertObject:dic atIndex:0];
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:array] forKey:kDownloadVideoList];
@@ -85,7 +85,7 @@
     [array removeObjectAtIndex:index];
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:array] forKey:kDownloadVideoList];
     
-    NSString *filePath = dataDic[@"filePath"];
+    NSString *filePath = dataDic[@"fileName"];
     BOOL isHave = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     if (isHave) {
         BOOL isDelte = [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
@@ -151,7 +151,7 @@ didFinishDownloadingToURL:(NSURL *)location
         if ([videoUrl rangeOfString:dic[@"url"]].location != NSNotFound) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:dic];
             [dict setValue:@(YES) forKey:@"isDownload"];
-            [dict setValue:fileName forKey:@"filePath"];
+            [dict setValue:fileName forKey:@"fileName"];
             [_videoList replaceObjectAtIndex:i withObject:dict];
             break;
         }

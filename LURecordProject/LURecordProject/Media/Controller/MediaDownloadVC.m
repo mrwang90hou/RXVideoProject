@@ -131,7 +131,7 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     cell.model = model;
     cell.isDelete = _isDelete;
     [cell refreshDownloadUI:model.isDownload];
-    NSLog(@"[cellForRowAtIndexPath]model.filePath = %@",model.filePath);
+    NSLog(@"[cellForRowAtIndexPath]model.fileName = %@",model.fileName);
     WS(weakSelf);
     [cell setDeleteCellBlock:^(MediaDownloadCell *cell) {
         NSInteger index = [weakSelf.tableView indexPathForCell:cell].row;
@@ -150,20 +150,19 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     NSLog(@"model.videoName = %@",model.videoName);//视频名称
     NSLog(@"model.isDownload = %d",model.isDownload);//是否下载完成
     NSLog(@"model.videoBytes = %lf",model.videoBytes);//视频大小
-    NSLog(@"model.filePath = %@",model.filePath);//本地视频地址
-    
-    NSArray *paths1 = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSLog(@"model.fileName = %@",model.fileName);//本地视频地址、名称
+//    NSArray *paths1 = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     //获取Caches中的缓存地址
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
-    NSString *docDir = [paths objectAtIndex:0];
-    NSLog(@"docDir = %@",docDir);
-    NSString *filePath1 = [docDir stringByAppendingPathComponent:@"fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
-    NSArray *array1 = [[NSArray alloc] initWithContentsOfFile:filePath1];
-    NSLog(@"array1 = %@",array1);
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
+//    NSString *docDir = [paths objectAtIndex:0];
+//    NSLog(@"docDir = %@",docDir);
+//    NSString *filePath1 = [docDir stringByAppendingPathComponent:@"fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
+//    NSArray *array1 = [[NSArray alloc] initWithContentsOfFile:filePath1];
+//    NSLog(@"array1 = %@",array1);
     
     
     [self setAVPlayer];
-    NSString *UrlStr = model.filePath;
+    NSString *UrlStr = model.fileName;
     NSLog(@"UrlStr = %@",UrlStr);
 //    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
     self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",UrlStr];
@@ -177,7 +176,7 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
 //    NSDictionary *dataDic = [array objectAtIndex:index];
 //    [array removeObjectAtIndex:index];
 //    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:array] forKey:kDownloadVideoList];
-//    NSString *filePath = dataDic[@"filePath"];
+//    NSString *filePath = dataDic[@"fileName"];
 //    NSLog(@"filePath = %@",filePath);
 //    BOOL isHave = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 //    NSLog(@"isHave = %d",isHave);
