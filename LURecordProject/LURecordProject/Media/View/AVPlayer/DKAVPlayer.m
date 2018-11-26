@@ -189,7 +189,11 @@
         return nil;
     }
     NSArray *array = [[NSUserDefaults standardUserDefaults] objectForKey:kDownloadVideoList];
-
+    
+    NSLog(@"NSHomeDirectory = %@",NSHomeDirectory());
+    NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
+    NSLog(@"cachePath = %@",cachePaths.firstObject);
+    
     for (NSDictionary *dic in array) {
         if ([urlStr rangeOfString:dic[@"url"]].location != NSNotFound) {
             NSString *filePath = dic[@"filePath"];
@@ -197,14 +201,10 @@
                 _isLocateVideo = YES;//是否是已下载视频播放
                 _videoBtn.hidden = YES;
                 NSLog(@"当前为已下载视频播放！！！\nfilePath = %@",dic[@"filePath"]);
-                NSURL * filePathURL = [NSURL fileURLWithPath:dic[@"filePath"]];
+//                NSURL * filePathURL = [NSURL fileURLWithPath:dic[@"filePath"]];
+//                NSLog(@"filePathURL = %@",filePathURL);
 //                NSURL * filePathURL =[NSURL fileURLWithPath:[NSString stringWithFormat:@"/private%@",dic[@"filePath"]]];
-                NSLog(@"filePathURL = %@",filePathURL);
-                NSLog(@"NSHomeDirectory = %@",NSHomeDirectory());
-                NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
-                NSLog(@"cachePath = %@",cachePaths.firstObject);
-                
-                return filePathURL;
+//                return filePathURL;
 //                return [NSURL fileURLWithPath:@"file:///private/var/mobile/Containers/Data/Application/9E2C2E56-79AC-419D-83A7-8326249C8E1C/Library/Caches/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4"];
             }
         }
@@ -212,13 +212,17 @@
     NSURL *mediaUrl;
     if (![urlStr hasPrefix:@"http"]) {
 //        本地视频
-        urlStr = [[NSBundle mainBundle] pathForResource:urlStr ofType:@""];
-        mediaUrl = [NSURL fileURLWithPath:urlStr];
+        
+        NSString *folderPath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/videos"];
+        NSString *fileNamePath = [folderPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", urlStr]];// 保存文件的名称
+//        urlStr = [[NSBundle mainBundle] pathForResource:urlStr ofType:@"mp4"];
+        mediaUrl = [NSURL fileURLWithPath:fileNamePath];
         NSLog(@"not http!!!");
     }else{
         mediaUrl = [NSURL URLWithString:urlStr];
         NSLog(@"http!!!");
     }
+    NSLog(@"mediaUrl = %@",mediaUrl);
     return mediaUrl;
 }
 

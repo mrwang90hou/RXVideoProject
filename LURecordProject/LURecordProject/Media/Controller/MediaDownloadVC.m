@@ -165,7 +165,7 @@ NSString *kMediaDownloadCell = @"MediaDownloadCell";
     [self setAVPlayer];
     NSString *UrlStr = model.filePath;
     NSLog(@"UrlStr = %@",UrlStr);
-    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
+//    UrlStr = @"http://v.dansewudao.com/444fccb3590845a799459f6154d2833f/fe86a70dc4b8497f828eaa19058639ba-6e51c667edc099f5b9871e93d0370245-sd.mp4";
     self.avPlayer.mediaUrlStr = [NSString stringWithFormat:@"%@",UrlStr];
     [self.view addSubview:self.avPlayer];
     

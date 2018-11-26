@@ -127,13 +127,16 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location
 {
+    //创建文件夹
+    [self createDir];
     //1.拿到cache文件夹的路径
     NSString *cache=[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)lastObject];
     //2,拿到cache文件夹和文件名
-    NSString *file=[cache stringByAppendingPathComponent:downloadTask.response.suggestedFilename];
-    NSLog(@"location = %@\ncache = %@\nfile =%@\n",location,cache,file);
+    NSString *filePath=[cache stringByAppendingPathComponent:[NSString stringWithFormat:@"videos/%@",downloadTask.response.suggestedFilename]];
+    NSString *fileName = downloadTask.response.suggestedFilename;
+    NSLog(@"location = %@\ncache = %@\nfilePath =%@\nfileName = %@\n",location,cache,filePath,fileName);
     //保存至缓存地址：cache
-    [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:file] error:nil];
+    [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
 
 //    //3，保存视频到相册
 //    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(file)) {
@@ -148,7 +151,7 @@ didFinishDownloadingToURL:(NSURL *)location
         if ([videoUrl rangeOfString:dic[@"url"]].location != NSNotFound) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:dic];
             [dict setValue:@(YES) forKey:@"isDownload"];
-            [dict setValue:file forKey:@"filePath"];
+            [dict setValue:fileName forKey:@"filePath"];
             [_videoList replaceObjectAtIndex:i withObject:dict];
             break;
         }
@@ -158,6 +161,27 @@ didFinishDownloadingToURL:(NSURL *)location
     dispatch_async(dispatch_get_main_queue(), ^{
         self.refreshDownloadSuccessCellBlock(videoUrl);
     });
+}
+#pragma mark 使用 NSHomeDirectory() 创建文件目录
+- (void) createDir {
+    
+    // NSHomeDirectory()：应用程序目录， @"Library/Caches/videos"：在tmp文件夹下创建videos 文件夹
+    NSString *filePath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/videos"];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    BOOL isDir = NO;
+    
+    // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
+    BOOL existed = [fileManager fileExistsAtPath:filePath isDirectory:&isDir];
+    
+    if ( !(isDir == YES && existed == YES) ) {
+        
+        // 在 tmp 目录下创建一个 temp 目录
+        [fileManager createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    NSLog(@"+++++++++++++++++++%@",filePath);
 }
 
 
